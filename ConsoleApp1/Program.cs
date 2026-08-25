@@ -29,6 +29,11 @@ class Program
 
     static void ListTasks()
     {
+        if (tasks.Count == 0)
+        { 
+        Console.WriteLine("No tasks available.");
+        return;
+        }
         foreach (Task task in tasks)
         {
             Console.WriteLine("ID: " + task.Id);
@@ -73,6 +78,37 @@ class Program
         Console.WriteLine("Task not found");
     }
 
+    public static void SearchTasks()
+    {
+        Console.WriteLine("Search for tasks with status:");
+        Console.WriteLine("Enter 'p' for Pending tasks or 'c' for Completed tasks:");
+
+        string choice = Console.ReadLine().ToLower();
+        bool found = false;
+        foreach (Task task in tasks)
+        {
+            if (choice == "p" && task.Status.ToLower() == "pending")
+            {
+                Console.WriteLine(
+                    $"Task Id: {task.Id}\nTask Status: {task.Status}\nTask Description: {task.Description}\n"
+                );
+                found = true;
+            }
+            else if (choice == "c" && task.Status.ToLower() == "completed")
+            {
+                Console.WriteLine(
+                    $"Task Id: {task.Id}\nTask Status: {task.Status}\nTask Description: {task.Description}\n"
+                );
+                found = true;
+            }
+        }
+
+        if (!found)
+        {
+            Console.WriteLine("No matching tasks found!");
+        }
+    }
+
     static void Main()
     {
         while (true)
@@ -82,6 +118,8 @@ class Program
             Console.WriteLine("3. Complete");
             Console.WriteLine("4. Delete");
             Console.WriteLine("5. Exit");
+            Console.WriteLine("6. Search by Status");
+            
 
             Console.Write("Enter choice: ");
             int choice = int.Parse(Console.ReadLine());
@@ -106,6 +144,10 @@ class Program
 
                 case 5:
                     return;
+
+                case 6:
+                    SearchTasks();
+                    break;
 
                 default:
                     Console.WriteLine("Invalid choice");
