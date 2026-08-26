@@ -4,30 +4,41 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-class Entity
+abstract class Entity
 {
     public int Id;
     public static int count = 1;
-    
+
+    public abstract void Display();
 }
+
 
 class Task : Entity
 {
 
-    public string Description="";
-    private string _status = ""; 
+    public string Description = "";
+    private string _status = "";
 
     public string Status
     {
 
         get => _status;
 
-        set => _status = value == "pending" || value == "completed" 
-            ? value 
+        set => _status = value == "pending" || value == "completed"
+            ? value
             : throw new ArgumentException("Status must be Pending or Completed");
 
     }
+    public override void Display()
+
+    {
+        Console.WriteLine($"ID: {Id}");
+        Console.WriteLine($"Description: {Description}");
+        Console.WriteLine($"Status: {Status}");
+
+    }
 }
+
 
 class Program
 {
@@ -67,9 +78,7 @@ class Program
         }
         foreach (Task task in tasks)
         {
-            Console.WriteLine("ID: " + task.Id);
-            Console.WriteLine("Description: " + task.Description);
-            Console.WriteLine("Status: " + task.Status);
+            task.Display();
         }
     }
 
@@ -97,9 +106,6 @@ class Program
         int id = int.Parse(Console.ReadLine());
 
         foreach (Task task in tasks)
-        {
-            if (task.Id == id)
-            {
                 tasks.Remove(task);
                 Console.WriteLine("Task deleted");
                 return;
@@ -108,6 +114,7 @@ class Program
 
         Console.WriteLine("Task not found");
     }
+    
 
     public static void SearchTasks()
     {
@@ -120,9 +127,7 @@ class Program
         {
             if (choice == "p" && task.Status.ToLower() == "pending")
             {
-                Console.WriteLine(
-                    $"Task Id: {task.Id}\nTask Status: {task.Status}\nTask Description: {task.Description}\n"
-                );
+            task.Display();
                 found = true;
             }
             else if (choice == "c" && task.Status.ToLower() == "completed")
@@ -150,9 +155,7 @@ class Program
             {
 
                 Console.WriteLine("\nTask Found:");
-                Console.WriteLine("ID: " + task.Id);
-                Console.WriteLine("Description: " + task.Description);
-                Console.WriteLine("Status: " + task.Status);
+            task.Display();
 
                 return;
             }
