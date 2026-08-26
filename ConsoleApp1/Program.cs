@@ -1,28 +1,59 @@
 ﻿
-class Program
+using static Program;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Entity
+{
+    public int Id;
+    public static int count = 1;
+    
+}
+
+class Task : Entity
 {
 
-    public class Task
-    {
-        public int Id;
-        public string Description;
-        public string Status;
-    }
-    static List<Task> tasks = new List<Task>();
+    public string Description="";
+    private string _status = ""; 
 
+    public string Status
+    {
+
+        get => _status;
+
+        set => _status = value == "pending" || value == "completed" 
+            ? value 
+            : throw new ArgumentException("Status must be Pending or Completed");
+
+    }
+}
+
+class Program
+{
+    private static List<Task> tasks = new List<Task>();
     static void AddTask()
     {
         Task task = new Task();
 
-        Console.Write("Enter ID");
-        task.Id = int.Parse(Console.ReadLine());
+        try
+        {
+            Console.Write("Enter Description");
+            task.Description = Console.ReadLine();
 
-        Console.Write("Enter Description");
-        task.Description = Console.ReadLine();
+            Console.Write("Enter Status");
+            task.Status = (Console.ReadLine()).ToLower();
 
-        task.Status = "Pending";
 
-        tasks.Add(task);
+            task.Id = Entity.count++;
+            tasks.Add(task);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
 
         Console.WriteLine("Task added");
     }
@@ -30,9 +61,9 @@ class Program
     static void ListTasks()
     {
         if (tasks.Count == 0)
-        { 
-        Console.WriteLine("No tasks available.");
-        return;
+        {
+            Console.WriteLine("No tasks available.");
+            return;
         }
         foreach (Task task in tasks)
         {
@@ -51,7 +82,7 @@ class Program
         {
             if (task.Id == id)
             {
-                task.Status = "Completed";
+                task.Status = "completed";
                 Console.WriteLine("Task completed");
                 return;
             }
@@ -109,8 +140,31 @@ class Program
         }
     }
 
+    static void FindById()
+    {
+        Console.Write("Enter ID: ");
+        int id = int.Parse(Console.ReadLine());
+        foreach (Task task in tasks)
+        {
+            if (task.Id == id)
+            {
+
+                Console.WriteLine("\nTask Found:");
+                Console.WriteLine("ID: " + task.Id);
+                Console.WriteLine("Description: " + task.Description);
+                Console.WriteLine("Status: " + task.Status);
+
+                return;
+            }
+        }
+        Console.WriteLine("Task not found");
+    }
+
+
+
     static void Main()
     {
+
         while (true)
         {
             Console.WriteLine("1. Add");
@@ -119,7 +173,8 @@ class Program
             Console.WriteLine("4. Delete");
             Console.WriteLine("5. Exit");
             Console.WriteLine("6. Search by Status");
-            
+            Console.WriteLine("7. Find by Id");
+
 
             Console.Write("Enter choice: ");
             int choice = int.Parse(Console.ReadLine());
@@ -149,10 +204,23 @@ class Program
                     SearchTasks();
                     break;
 
+                case 7:
+                    FindById();
+                    break;
+
                 default:
                     Console.WriteLine("Invalid choice");
                     break;
             }
         }
     }
+
 }
+
+
+
+
+
+
+
+
